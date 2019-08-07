@@ -49,7 +49,37 @@ sid=###ORACLE_SID###
 # Default value : false
 # Mandatory     : No
 #-----------------------------------------------------------------------------
-createAsContainerDatabase=false
+createAsContainerDatabase=true
+
+#-----------------------------------------------------------------------------
+# Name          : numberOfPDBs
+# Datatype      : Number
+# Description   : Specify the number of pdb to be created
+# Valid values  : 0 to 4094
+# Default value : 0
+# Mandatory     : No
+#-----------------------------------------------------------------------------
+numberOfPDBs=1
+
+#-----------------------------------------------------------------------------
+# Name          : pdbName 
+# Datatype      : String
+# Description   : Specify the pdbname/pdbname prefix if one or more pdb need to be created
+# Valid values  : Check Oracle12c Administrator's Guide
+# Default value : None
+# Mandatory     : No
+#-----------------------------------------------------------------------------
+pdbName=###ORACLE_PDB###
+
+#-----------------------------------------------------------------------------
+# Name          : pdbAdminPassword
+# Datatype      : String
+# Description   : PDB Administrator user password
+# Valid values  : Check Oracle12c Administrator's Guide
+# Default value : None
+# Mandatory     : No
+#-----------------------------------------------------------------------------
+pdbAdminPassword=###ORACLE_PWD###
 
 #-----------------------------------------------------------------------------
 # Name          : templateName

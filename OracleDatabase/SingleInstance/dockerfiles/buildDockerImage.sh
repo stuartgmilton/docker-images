@@ -143,7 +143,7 @@ if [ "$VERSION" == "12.1.0.2" ] || [ "$VERSION" == "11.2.0.2" ] || [ "$VERSION" 
 fi;
 
 # Oracle Database Image Name
-IMAGE_NAME="oracle/database:$VERSION-$EDITION"
+IMAGE_NAME="oracle/standard_db:$VERSION-$EDITION"
 
 # Go into version folder
 cd "$VERSION" || {
@@ -190,6 +190,12 @@ echo "Building image '$IMAGE_NAME' ..."
 
 # BUILD THE IMAGE (replace all environment variables)
 BUILD_START=$(date '+%s')
+
+
+echo $EDITION
+echo $IMAGE_NAME
+echo $DOCKERFILE
+
 docker build --force-rm=true --no-cache=true \
        $DOCKEROPS $PROXY_SETTINGS --build-arg DB_EDITION=$EDITION \
        -t $IMAGE_NAME -f $DOCKERFILE . || {

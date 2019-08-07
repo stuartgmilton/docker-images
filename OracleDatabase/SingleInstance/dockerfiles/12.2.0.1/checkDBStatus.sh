@@ -17,6 +17,15 @@ OPEN_MODE="READ WRITE"
 ORAENV_ASK=NO
 source oraenv
 
+###
+###
+#
+# Need to think of another check status
+#
+exit 0;
+###
+###
+
 # Check Oracle at least one PDB has open_mode "READ WRITE" and store it in status
 status=`sqlplus -s / as sysdba << EOF
    set heading off;

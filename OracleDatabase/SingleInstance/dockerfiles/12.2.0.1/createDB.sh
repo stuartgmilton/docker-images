@@ -25,12 +25,25 @@ export ORACLE_PDB=${2:-ORCLPDB1}
 export ORACLE_PWD=${3:-"`openssl rand -base64 8`1"}
 echo "ORACLE PASSWORD FOR SYS, SYSTEM AND PDBADMIN: $ORACLE_PWD";
 
+echo "";
+echo "CREATEDB";
+echo "CREATEDB";
+echo "CREATEDB";
+echo "CREATEDB";
+echo "CREATEDB";
+echo "CREATEDB";
+echo "";
+
+ls $ORACLE_BASE
+
 # Replace place holders in response file
 cp $ORACLE_BASE/$CONFIG_RSP $ORACLE_BASE/dbca.rsp
 sed -i -e "s|###ORACLE_SID###|$ORACLE_SID|g" $ORACLE_BASE/dbca.rsp
 sed -i -e "s|###ORACLE_PDB###|$ORACLE_PDB|g" $ORACLE_BASE/dbca.rsp
 sed -i -e "s|###ORACLE_PWD###|$ORACLE_PWD|g" $ORACLE_BASE/dbca.rsp
 sed -i -e "s|###ORACLE_CHARACTERSET###|$ORACLE_CHARACTERSET|g" $ORACLE_BASE/dbca.rsp
+
+ls $ORACLE_BASE
 
 # If there is greater than 8 CPUs default back to dbca memory calculations
 # dbca will automatically pick 40% of available memory for Oracle DB
@@ -44,6 +57,10 @@ fi;
 # Create network related config files (sqlnet.ora, tnsnames.ora, listener.ora)
 mkdir -p $ORACLE_HOME/network/admin
 echo "NAME.DIRECTORY_PATH= (TNSNAMES, EZCONNECT, HOSTNAME)" > $ORACLE_HOME/network/admin/sqlnet.ora
+
+echo " "
+echo "HERE"
+echo " "
 
 # Listener.ora
 echo "LISTENER = 
@@ -65,22 +82,37 @@ dbca -silent -createDatabase -responseFile $ORACLE_BASE/dbca.rsp ||
  cat /opt/oracle/cfgtoollogs/dbca/$ORACLE_SID.log
 
 echo "$ORACLE_SID=localhost:1521/$ORACLE_SID" > $ORACLE_HOME/network/admin/tnsnames.ora
-echo "$ORACLE_PDB= 
-(DESCRIPTION = 
+#echo "$ORACLE_PDB= 
+#(DESCRIPTION = 
+#  (ADDRESS = (PROTOCOL = TCP)(HOST = 0.0.0.0)(PORT = 1521))
+#  (CONNECT_DATA =
+#    (SERVER = DEDICATED)
+#    (SERVICE_NAME = $ORACLE_PDB)
+#  )
+#)" >> $ORACLE_HOME/network/admin/tnsnames.ora
+
+##Added this
+echo "$ORACLE_SID=
+(DESCRIPTION =
   (ADDRESS = (PROTOCOL = TCP)(HOST = 0.0.0.0)(PORT = 1521))
   (CONNECT_DATA =
     (SERVER = DEDICATED)
-    (SERVICE_NAME = $ORACLE_PDB)
+    (SERVICE_NAME = $ORACLE_SID)
   )
 )" >> $ORACLE_HOME/network/admin/tnsnames.ora
+
+
 
 # Remove second control file, fix local_listener, make PDB auto open, enable EM global port
 sqlplus / as sysdba << EOF
    ALTER SYSTEM SET control_files='$ORACLE_BASE/oradata/$ORACLE_SID/control01.ctl' scope=spfile;
-   ALTER PLUGGABLE DATABASE $ORACLE_PDB SAVE STATE;
    EXEC DBMS_XDB_CONFIG.SETGLOBALPORTENABLED (TRUE);
    exit;
 EOF
 
+#This line was removed from above EXEC
+#   ALTER PLUGGABLE DATABASE $ORACLE_PDB SAVE STATE;
+
+
 # Remove temporary response file
-rm $ORACLE_BASE/dbca.rsp
+#rm $ORACLE_BASE/dbca.rsp
